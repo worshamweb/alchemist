@@ -1,36 +1,41 @@
+require 'rubygems'
 require 'rake'
-require 'rake/testtask'
- 
-PKG_FILES = %w(Rakefile) +
-      Dir.glob("{lib}/**/*")
-       
-gem_spec = Gem::Specification.new do |gem_spec|
-  gem_spec.name = 'alchemist'
-  gem_spec.version = '0.1.2'
-  gem_spec.summary = 'Conversions... like you\'ve never seen them before!'
-  gem_spec.description = 'Conversions... like you\'ve never seen them before!!'
-  gem_spec.email = 'matt@toastyapps.com'
-  gem_spec.homepage = 'http://github.com/toastyapps/alchemist'
-  gem_spec.authors = ["Matthew Mongeau"]
-  gem_spec.files = PKG_FILES
+require 'bundler/setup'
+
+require 'rspec/core/rake_task'
+require 'rake/rdoctask'
+require 'yaml'
+
+RSpec::Core::RakeTask.new(:spec)
+
+task :default => :test
+task :test => [:spec]
+
+PKG_FILES = %w(Rakefile) + Dir.glob("{lib}/**/*")
+
+gem_spec = Gem::Specification.new do |spec|
+  spec.name = 'alchemist'
+  spec.version = '0.2.0'
+  spec.summary = "Conversions...like you've never seen them before"
+  spec.description = "Conversions...like you've never seen them before."
+  spec.email = 'halogenandtoast@gmail.com'
+  spec.homepage = 'http://github.com/halogenandtoast/alchemist'
+  spec.authors = ['Matthew Mongeau']
+  spec.files = PKG_FILES
 end
- 
-desc "Generate a gemspec file"
+
+desc "Generate gemspec"
 task :gemspec do
   File.open("#{gem_spec.name}.gemspec", "w") do |f|
     f.write gem_spec.to_yaml
   end
 end
 
-
-task :default => [:test]
-task :test => ['test:units']
-
-namespace :test do
-	Rake::TestTask.new(:units) do |test|
-		test.libs << 'test'
-		test.ruby_opts << '-rubygems'
-		test.pattern = 'test/*.rb'
-		test.verbose = true
-	end
+desc "Generate documentation"
+Rake::RDocTask.new(:rdoc) do |rdoc|
+  rdoc.rdoc_dir = 'doc'
+  rdoc.title = 'Alchemist'
+  rdoc.options << '--line-numbers' << '--inline-source'
+  rdoc.rdoc_files.include('README*')
+  rdoc.rdoc_files.include('lib/**/*.rb')
 end

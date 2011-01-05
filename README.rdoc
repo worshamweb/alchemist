@@ -1,0 +1,19 @@
+=Alchemist
+
+==Adding Units
+
+  Alchemist.define(:measurement) do
+    unit(:meter, 1) do
+      plural :meters
+      short  :m
+      alias  :metre => :metres
+    end
+  end
+
+==Using Alchemist
+
+  # basic usage
+  Alchemist.unit(1, :meter).to(:feet)
+
+  # with sugar
+  1.meter.to.feet
